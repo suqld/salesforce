@@ -13,6 +13,14 @@ use Httpful\Request;
  */
 class HttpfulClient implements HttpClientInterface
 {
+
+    private $proxy;
+
+    public function __construct($proxy = null)
+    {
+        $this->proxy = $proxy;
+    }
+
     /**
      * @param string $uri
      * @param null $options
@@ -26,7 +34,6 @@ class HttpfulClient implements HttpClientInterface
 
             $this->addOptionsToRequest($request, $options);
             $response = $request->send();
-
         } catch (\Exception $e) {
             throw new HttpRequestException('Unexpected server response.' . $e->getMessage(), $e->getCode());
         }
@@ -50,7 +57,6 @@ class HttpfulClient implements HttpClientInterface
 
             $this->addOptionsToRequest($request, $options);
             $response = $request->send();
-
         } catch (\Exception $e) {
             throw new HttpRequestException('Unexpected server response.' . $e->getMessage(), $e->getCode());
         }
@@ -74,7 +80,6 @@ class HttpfulClient implements HttpClientInterface
 
             $this->addOptionsToRequest($request, $options);
             $response = $request->send();
-
         } catch (\Exception $e) {
             throw new HttpRequestException('Unexpected server response.' . $e->getMessage(), $e->getCode());
         }
@@ -119,7 +124,12 @@ class HttpfulClient implements HttpClientInterface
         if (is_array($options) && isset($options['auto_parse'])) {
             $request->autoParse($options['auto_parse']);
         }
+
+        // Force proxy from config to avoid specifying it for every request
+        if (!empty($this->proxy)) {
+            $request->addOnCurlOption('CURLOPT_PROXY', $this->proxy);
+        }
+
         return $request;
     }
-
 }
