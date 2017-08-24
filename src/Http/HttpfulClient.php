@@ -127,7 +127,7 @@ class HttpfulClient implements HttpClientInterface
 
         // Force proxy from config to avoid specifying it for every request
         if (!empty($this->proxy)) {
-            $request->addOnCurlOption('CURLOPT_PROXY', $this->proxy);
+            $request->addOnCurlOption(CURLOPT_PROXY, $this->proxy);
         }
 
         return $request;
