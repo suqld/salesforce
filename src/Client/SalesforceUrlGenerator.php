@@ -2,7 +2,6 @@
 
 namespace GenesisGlobal\Salesforce\Client;
 
-
 use GenesisGlobal\Salesforce\Http\UrlGeneratorInterface;
 
 /**
@@ -42,7 +41,23 @@ class SalesforceUrlGenerator implements UrlGeneratorInterface
     {
         $url = $this->getBasePath();
         if ($action) {
+            // make sure action doesn't have forwarding slash
+            $url = $url . ltrim($action, "/");
+        }
+        $url = $this->addParameters($url, $parameters);
 
+        return $url;
+    }
+
+    /**
+     * @param null $action
+     * @param null $parameters
+     * @return string
+     */
+    public function getUrlApex($action = null, $parameters = null)
+    {
+        $url = $this->getBasePathApex();
+        if ($action) {
             // make sure action doesn't have forwarding slash
             $url = $url . ltrim($action, "/");
         }
@@ -61,6 +76,15 @@ class SalesforceUrlGenerator implements UrlGeneratorInterface
     }
 
     /**
+     * @return string
+     */
+    public function getBasePathApex()
+    {
+        // make sure we got only one slash there :)
+        return rtrim($this->endpoint, "/") . '/services/apexrest/';
+    }
+
+    /**
      * @param $path
      * @param $parameters
      * @return string
@@ -68,7 +92,6 @@ class SalesforceUrlGenerator implements UrlGeneratorInterface
     protected function addParameters($path, $parameters)
     {
         if ($parameters && is_array($parameters)) {
-
             $glue = '?';
             foreach ($parameters as $key => $value) {
                 $path .= $glue . $key . '=' . strtr($value, ' ', '+');

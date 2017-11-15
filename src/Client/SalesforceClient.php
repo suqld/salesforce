@@ -2,7 +2,6 @@
 
 namespace GenesisGlobal\Salesforce\Client;
 
-
 use GenesisGlobal\Salesforce\Authentication\AuthenticatorInterface;
 use GenesisGlobal\Salesforce\Http\Exception\BadResponseException;
 use GenesisGlobal\Salesforce\Http\HttpClientInterface;
@@ -52,8 +51,9 @@ class SalesforceClient implements SalesforceClientInterface
         HttpClientInterface $httpClient,
         UrlGeneratorInterface $urlGenerator,
         AuthenticatorInterface $authenticator,
-        ResponseCreatorInterface $responseCreator)
-    {
+        ResponseCreatorInterface $responseCreator
+    ) {
+
         $this->httpClient = $httpClient;
         $this->urlGenerator = $urlGenerator;
         $this->authenticator = $authenticator;
@@ -68,14 +68,33 @@ class SalesforceClient implements SalesforceClientInterface
     public function get($action = null, $query = null)
     {
         try {
+            //die($this->urlGenerator->getUrl($action, $this->resolveParams($query)));
             $salesforceResponse = $this->httpClient->get(
                 $this->urlGenerator->getUrl($action, $this->resolveParams($query)),
                 [ 'headers' => $this->getAuthorizationHeaders() ]
             );
             return $this->responseCreator->create($salesforceResponse);
-
         } catch (BadResponseException $e) {
+            // we return Response with success=false
+            return $this->responseCreator->create($e->getResponse());
+        }
+    }
 
+    /**
+     * @param string $action
+     * @param null $query
+     * @return ResponseInterface
+     */
+    public function getApex($action = null, $query = null)
+    {
+        try {
+            //die($this->urlGenerator->getUrl($action, $this->resolveParams($query)));
+            $salesforceResponse = $this->httpClient->get(
+                $this->urlGenerator->getUrlApex($action, $this->resolveParams($query)),
+                [ 'headers' => $this->getAuthorizationHeaders() ]
+            );
+            return $this->responseCreator->create($salesforceResponse);
+        } catch (BadResponseException $e) {
             // we return Response with success=false
             return $this->responseCreator->create($e->getResponse());
         }
@@ -98,7 +117,6 @@ class SalesforceClient implements SalesforceClientInterface
             );
             return $this->responseCreator->create($httpResponse);
         } catch (BadResponseException $e) {
-
             // we return Response with success=false
             return $this->responseCreator->create($e->getResponse());
         }
@@ -121,7 +139,6 @@ class SalesforceClient implements SalesforceClientInterface
             );
             return $this->responseCreator->create($httpResponse);
         } catch (BadResponseException $e) {
-
             // we return Response with success=false
             return $this->responseCreator->create($e->getResponse());
         }

@@ -2,7 +2,6 @@
 
 namespace GenesisGlobal\Salesforce\Client;
 
-
 /**
  * Interface SalesforceClientInterface
  * @package GenesisGlobal\Salesforce\Client
@@ -15,6 +14,13 @@ interface SalesforceClientInterface
      * @return mixed
      */
     public function get($action = null, $query = null);
+
+    /**
+     * @param string $action
+     * @param null $query
+     * @return mixed
+     */
+    public function getApex($action = null, $query = null);
 
     /**
      * @param string|null $action
