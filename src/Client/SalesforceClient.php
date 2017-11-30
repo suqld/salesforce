@@ -1,5 +1,4 @@
 <?php
-
 namespace GenesisGlobal\Salesforce\Client;
 
 use GenesisGlobal\Salesforce\Authentication\AuthenticatorInterface;
@@ -52,7 +51,8 @@ class SalesforceClient implements SalesforceClientInterface
         UrlGeneratorInterface $urlGenerator,
         AuthenticatorInterface $authenticator,
         ResponseCreatorInterface $responseCreator
-    ) {
+    )
+    {
 
         $this->httpClient = $httpClient;
         $this->urlGenerator = $urlGenerator;
@@ -63,15 +63,16 @@ class SalesforceClient implements SalesforceClientInterface
     /**
      * @param string $action
      * @param null $query
+     * @param boolean $relativeToRoot Supplied action is relative to Root path
      * @return ResponseInterface
      */
-    public function get($action = null, $query = null)
+    public function get($action = null, $query = null, $relativeToRoot = false)
     {
         try {
             //die($this->urlGenerator->getUrl($action, $this->resolveParams($query)));
             $salesforceResponse = $this->httpClient->get(
-                $this->urlGenerator->getUrl($action, $this->resolveParams($query)),
-                [ 'headers' => $this->getAuthorizationHeaders() ]
+                $this->urlGenerator->getUrl($action, $this->resolveParams($query), $relativeToRoot),
+                ['headers' => $this->getAuthorizationHeaders()]
             );
             return $this->responseCreator->create($salesforceResponse);
         } catch (BadResponseException $e) {
@@ -91,7 +92,7 @@ class SalesforceClient implements SalesforceClientInterface
             //die($this->urlGenerator->getUrl($action, $this->resolveParams($query)));
             $salesforceResponse = $this->httpClient->get(
                 $this->urlGenerator->getUrlApex($action, $this->resolveParams($query)),
-                [ 'headers' => $this->getAuthorizationHeaders() ]
+                ['headers' => $this->getAuthorizationHeaders()]
             );
             return $this->responseCreator->create($salesforceResponse);
         } catch (BadResponseException $e) {
@@ -113,7 +114,7 @@ class SalesforceClient implements SalesforceClientInterface
                 $this->urlGenerator->getUrl($action, $this->resolveParams($query)),
                 $data,
                 self::BODY_TYPE_JSON,
-                [ 'headers' => $this->getAuthorizationHeaders() ]
+                ['headers' => $this->getAuthorizationHeaders()]
             );
             return $this->responseCreator->create($httpResponse);
         } catch (BadResponseException $e) {
@@ -135,7 +136,7 @@ class SalesforceClient implements SalesforceClientInterface
                 $this->urlGenerator->getUrl($action, $this->resolveParams($query)),
                 $data,
                 self::BODY_TYPE_JSON,
-                [ 'headers' => $this->getAuthorizationHeaders() ]
+                ['headers' => $this->getAuthorizationHeaders()]
             );
             return $this->responseCreator->create($httpResponse);
         } catch (BadResponseException $e) {

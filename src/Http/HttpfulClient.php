@@ -1,5 +1,4 @@
 <?php
-
 namespace GenesisGlobal\Salesforce\Http;
 
 use GenesisGlobal\Salesforce\Http\Exception\HttpRequestException;

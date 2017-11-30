@@ -1,5 +1,4 @@
 <?php
-
 namespace GenesisGlobal\Salesforce\Authentication;
 
 
@@ -71,7 +70,8 @@ class SalesforceUsernamePasswordAuthenticator implements AuthenticatorInterface
         HttpClientInterface $httpClient,
         UrlGeneratorInterface $urlGenerator,
         CredentialsKeeperInterface $credentialsKeeper,
-        AuthenticationCallbackInterface $authenticationCallback = null)
+        AuthenticationCallbackInterface $authenticationCallback = null
+    )
     {
         $this->httpClient = $httpClient;
         $this->urlGenerator = $urlGenerator;

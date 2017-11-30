@@ -1,5 +1,4 @@
 <?php
-
 namespace GenesisGlobal\Salesforce\Client;
 
 /**
@@ -11,9 +10,10 @@ interface SalesforceClientInterface
     /**
      * @param string $action
      * @param null $query
-     * @return mixed
+     * @param boolean $relativeToRoot Supplied action is relative to Root path
+     * @return ResponseInterface
      */
-    public function get($action = null, $query = null);
+    public function get($action = null, $query = null, $relativeToRoot = false);
 
     /**
      * @param string $action
