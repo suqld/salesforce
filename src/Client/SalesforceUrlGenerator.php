@@ -103,7 +103,8 @@ class SalesforceUrlGenerator implements UrlGeneratorInterface
         if ($parameters && is_array($parameters)) {
             $glue = '?';
             foreach ($parameters as $key => $value) {
-                $path .= $glue . $key . '=' . strtr($value, ' ', '+');
+                //$path .= $glue . $key . '=' . strtr($value, ' ', '+');
+                $path .= $glue . $key . '=' . urlencode($value);
                 $glue = '&';
             }
         }
