@@ -36,5 +36,13 @@ interface SalesforceClientInterface
      * @param null $data
      * @return mixed
      */
+    public function postApex($action = null, $data = null, $query = null);
+
+    /**
+     * @param string|null $action
+     * @param null $query
+     * @param null $data
+     * @return mixed
+     */
     public function patch($action = null, $data = null, $query = null);
 }

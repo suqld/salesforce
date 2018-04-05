@@ -51,8 +51,7 @@ class SalesforceClient implements SalesforceClientInterface
         UrlGeneratorInterface $urlGenerator,
         AuthenticatorInterface $authenticator,
         ResponseCreatorInterface $responseCreator
-    )
-    {
+    ) {
 
         $this->httpClient = $httpClient;
         $this->urlGenerator = $urlGenerator;
@@ -112,6 +111,28 @@ class SalesforceClient implements SalesforceClientInterface
         try {
             $httpResponse = $this->httpClient->post(
                 $this->urlGenerator->getUrl($action, $this->resolveParams($query)),
+                $data,
+                self::BODY_TYPE_JSON,
+                ['headers' => $this->getAuthorizationHeaders()]
+            );
+            return $this->responseCreator->create($httpResponse);
+        } catch (BadResponseException $e) {
+            // we return Response with success=false
+            return $this->responseCreator->create($e->getResponse());
+        }
+    }
+
+    /**
+     * @param string|null $action
+     * @param null $data
+     * @param null $query
+     * @return ResponseInterface
+     */
+    public function postApex($action = null, $data = null, $query = null)
+    {
+        try {
+            $httpResponse = $this->httpClient->post(
+                $this->urlGenerator->getUrlApex($action, $this->resolveParams($query)),
                 $data,
                 self::BODY_TYPE_JSON,
                 ['headers' => $this->getAuthorizationHeaders()]
