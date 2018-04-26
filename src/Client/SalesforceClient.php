@@ -167,6 +167,28 @@ class SalesforceClient implements SalesforceClientInterface
     }
 
     /**
+     * @param string|null $action
+     * @param null $data
+     * @param null $query
+     * @return ResponseInterface
+     */
+    public function patchApex($action = null, $data = null, $query = null)
+    {
+        try {
+            $httpResponse = $this->httpClient->patch(
+                $this->urlGenerator->getUrlApex($action, $this->resolveParams($query)),
+                $data,
+                self::BODY_TYPE_JSON,
+                ['headers' => $this->getAuthorizationHeaders()]
+            );
+            return $this->responseCreator->create($httpResponse);
+        } catch (BadResponseException $e) {
+            // we return Response with success=false
+            return $this->responseCreator->create($e->getResponse());
+        }
+    }
+
+    /**
      * @param $query
      * @return array|null
      */
